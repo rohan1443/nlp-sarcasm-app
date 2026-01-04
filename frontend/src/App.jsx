@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ShieldAlert, CheckCircle, Brain, AlertTriangle } from 'lucide-react';
+import { ShieldAlert, CheckCircle, Brain, AlertTriangle, Microscope, XCircle } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
@@ -20,13 +20,18 @@ function App() {
     setLoading(true);
     try {
       const res = await axios.post(`${API_URL}/predict`, { headline: input });
-      console.log(res.data);
       setResult(res.data);
     } catch (err) {
       console.error(err);
       alert("Prediction failed. Is backend running?");
     }
     setLoading(false);
+  };
+
+  // Helper to quickly load the failure example
+  const loadFailureExample = () => {
+    setInput("NASA discovers new exoplanet in habitable zone");
+    setResult(null); // Reset result so they have to click analyze
   };
 
   return (
@@ -47,6 +52,31 @@ function App() {
         </div>
       </header>
 
+      {/* ACADEMIC INFO SECTION */}
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-12">
+        <div className="bg-slate-50 p-4 border-b border-slate-200 flex items-center gap-2">
+          <Brain size={20} className="text-slate-500" />
+          <h3 className="font-bold text-slate-700">Model Architecture & Performance</h3>
+        </div>
+
+        <div className="p-8 grid md:grid-cols-2 gap-8">
+          <div>
+            <h4 className="font-bold text-indigo-600 mb-2">Selected Model</h4>
+            <p className="text-slate-600 mb-4">
+              Support Vector Machine (Linear SVC)with Grid Search Optimization.
+            </p>
+          </div>
+
+          <div>
+            <ul className="space-y-2 text-sm text-slate-500">
+              <li className="flex gap-2"><span>⚙️</span> <span>Kernel: Linear (C=1.0)</span></li>
+              <li className="flex gap-2"><span>📊</span> <span>Features: TF-IDF (Bigrams)</span></li>
+              <li className="flex gap-2"><span>🎯</span> <span>Accuracy: <b>78%</b> (Test Set)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       {/* MAIN CARD */}
       <div className="grid gap-8 mb-12">
         <div className="bg-white p-8 rounded-3xl shadow-xl border border-indigo-50">
@@ -59,13 +89,23 @@ function App() {
             onChange={(e) => setInput(e.target.value)}
           />
 
-          <button
-            onClick={handlePredict}
-            disabled={loading || !input}
-            className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 text-lg shadow-lg shadow-indigo-200"
-          >
-            {loading ? "Scanning Nuance..." : "Analyze Headline"}
-          </button>
+          <div className="flex gap-4 mt-4">
+            <button
+              onClick={handlePredict}
+              disabled={loading || !input}
+              className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 text-lg shadow-lg shadow-indigo-200"
+            >
+              {loading ? "Scanning Nuance..." : "Analyze Headline"}
+            </button>
+
+            {/* Quick Button to try the failure case */}
+            <button
+              onClick={loadFailureExample}
+              className="px-6 py-4 rounded-xl border-2 border-amber-200 text-amber-700 font-bold hover:bg-amber-50 transition-colors text-sm"
+            >
+              Try "Bias Test" Case
+            </button>
+          </div>
 
           {/* RESULT AREA */}
           {result && (
@@ -83,30 +123,47 @@ function App() {
         </div>
       </div>
 
-      {/* ACADEMIC INFO SECTION */}
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="bg-slate-50 p-4 border-b border-slate-200 flex items-center gap-2">
-          <Brain size={20} className="text-slate-500" />
-          <h3 className="font-bold text-slate-700">Model Architecture & Performance</h3>
+      {/* ⚠️ NEW: FAILURE ANALYSIS SECTION */}
+      <div className="bg-amber-50 rounded-3xl shadow-sm border border-amber-200 overflow-hidden">
+        <div className="bg-amber-100 p-4 border-b border-amber-200 flex items-center gap-2">
+          <Microscope size={20} className="text-amber-700" />
+          <h3 className="font-bold text-amber-900">Failure Analysis & Bias Report</h3>
         </div>
 
-        <div className="p-8 grid md:grid-cols-2 gap-8">
-          <div>
-            <h4 className="font-bold text-indigo-600 mb-2">🏆 Selected Model</h4>
-            <p className="text-slate-600 mb-4">
-              <strong className="text-slate-900">Support Vector Machine (Linear SVC)</strong> with Grid Search Optimization.
-            </p>
-            <ul className="space-y-2 text-sm text-slate-500">
-              <li className="flex gap-2"><span>⚙️</span> <span>Kernel: Linear (C=1.0)</span></li>
-              <li className="flex gap-2"><span>📊</span> <span>Features: TF-IDF (Bigrams)</span></li>
-              <li className="flex gap-2"><span>🎯</span> <span>Accuracy: <b>78%</b> (Test Set)</span></li>
-            </ul>
+        <div className="p-8">
+          <p className="text-amber-900/80 mb-6 leading-relaxed">
+            While highly accurate, our model exhibits <strong>Dataset Bias</strong>. It sometimes mistakes genuine scientific news for sarcasm if it contains specific entities like "NASA" or "Scientists".
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* The Failure Case */}
+            <div className="bg-white p-5 rounded-xl border border-amber-100 shadow-sm">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">The Failure Case</h4>
+              <p className="font-mono text-sm text-slate-600 mb-3 bg-slate-50 p-2 rounded border border-slate-100">
+                "NASA discovers new exoplanet in habitable zone"
+              </p>
+              <div className="flex items-center gap-2 text-red-500 font-bold text-sm bg-red-50 p-2 rounded inline-block">
+                <XCircle size={16} />
+                <span>Prediction: SARCASTIC (Incorrect)</span>
+              </div>
+            </div>
+
+            {/* The Explanation */}
+            <div className="bg-white p-5 rounded-xl border border-amber-100 shadow-sm">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Why this happens</h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                <strong>Topical Correlation vs. Semantics.</strong>
+                <br className="mb-2" />
+                In our training data, we found <strong>26 sarcastic</strong> NASA headlines vs only <strong>11 genuine</strong> ones. The model learned that "NASA" usually implies a joke, ignoring the serious tone of the sentence. This highlights the risk of overfitting to specific entities in small datasets.
+              </p>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="bg-slate-50 p-6 text-xs text-slate-400 text-center border-t border-slate-200">
-          Dataset: Kaggle Sarcasm Headlines (The Onion vs HuffPost) • Total Records: 26,709
-        </div>
+      {/* Footer */}
+      <div className="text-center text-slate-400 text-xs mt-12 mb-6">
+        MSc AI Assignment • Dataset: Kaggle Sarcasm Headlines • 26,709 Records
       </div>
 
     </div>
