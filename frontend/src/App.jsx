@@ -78,7 +78,7 @@ function App() {
           <div>
             <ul className="space-y-2 text-sm text-slate-500">
               <li className="flex gap-2"><span>⚙️</span> <span><strong>SVM:</strong> Linear Kernel (Acc: 78%)</span></li>
-              <li className="flex gap-2"><span>🧠</span> <span><strong>Deep Learning:</strong> Multi-Layer Perceptron (Acc: ~79%)</span></li>
+              <li className="flex gap-2"><span>🧠</span> <span><strong>Deep Learning:</strong> Multi-Layer Perceptron (Acc: ~59%)</span></li>
               <li className="flex gap-2"><span>📊</span> <span>Features: TF-IDF (Bigrams) for both</span></li>
             </ul>
           </div>
