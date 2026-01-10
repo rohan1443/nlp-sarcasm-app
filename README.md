@@ -99,25 +99,3 @@ This behaviour was traced back to **dataset bias**, where specific entities appe
 
 Rather than hiding these cases, they are explicitly documented and surfaced in the application to highlight real-world NLP limitations.
 
----
-
-## Academic Context
-
-This project was developed for the module:
-
-**CT052-3-M-NLP – Natural Language Processing**  
-**Master of Science in Artificial Intelligence**  
-Asia Pacific University of Technology & Innovation, Kuala Lumpur
-
-The emphasis is on:
-- Understanding how models work  
-- Evaluating trade-offs between approaches  
-- Analysing why and how models fail  
-
----
-
-## Author
-
-**Rohan Mazumdar**  
-MSc Artificial Intelligence  
-Asia Pacific University of Technology & Innovation
